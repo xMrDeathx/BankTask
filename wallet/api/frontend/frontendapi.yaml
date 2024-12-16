@@ -1,0 +1,85 @@
+openapi: 3.0.3
+info:
+  title: Bank
+  version: 0.0.1
+paths:
+  /banktask/api/v1/wallet:
+    post:
+      description: change wallet balance
+      operationId: ChangeBalance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/changeWalletRequest'
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad request
+        403:
+          description: Forbidden
+        500:
+          description: Internal Server Error
+
+  /banktask/api/v1/wallets/{wallet_id}:
+    get:
+      description: get wallet balance
+      operationId: GetBalance
+      parameters:
+        - name: wallet_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getBalanceResponse'
+        400:
+          description: Bad request
+        403:
+          description: Forbidden
+        500:
+          description: Internal Server Error
+
+components:
+  schemas:
+    changeWalletRequest:
+      type: object
+      required:
+        - walletId
+        - operationType
+        - amount
+      properties:
+        walletId:
+          type: string
+          format: uuid
+        operationType:
+          type: string
+          allOf:
+            - $ref: '#/components/schemas/operationType'
+        amount:
+          type: integer
+
+    getBalanceResponse:
+      type: object
+      required:
+        - balance
+      properties:
+        balance:
+          type: integer
+
+    operationType:
+      type: string
+      enum:
+        - DEPOSIT
+        - WITHDRAW
+
+
+  
